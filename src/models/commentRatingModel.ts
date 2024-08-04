@@ -10,7 +10,7 @@ const commentRatingSchema = new mongoose.Schema<coms_Rats>({
     userID: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: UsersModel
+        ref: 'UsersModel'
     },
     comments: {
         type: String,
