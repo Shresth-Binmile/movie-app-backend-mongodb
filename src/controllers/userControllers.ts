@@ -47,7 +47,7 @@ export const registerHandler = async(req:Request, res:Response) => {
             success: true,
             message: messages.REGISTER_SUCCESS,
             error: {},
-            data: req.body
+            data: {}
         })
     } catch (error) {
         return res.status(StatusCodes.BAD_REQUEST).json({
