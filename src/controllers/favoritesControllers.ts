@@ -7,9 +7,13 @@ import { UsersModel } from "../models/userModel"
 
 export const getFavorites = async(req: Request, res: Response) => {
     try {
-        const {token} = req.cookies
+        const token = req.headers['authorization']?.split(' ')[1]
+        // console.log(token)
 
-        if(!token){
+        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token!, ENV.JWT_SECRET_KEY)))
+        const userID = decodedToken.id
+
+        if(!userID){
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
                 message: messages.TOKEN_EXPIRED,
@@ -18,10 +22,8 @@ export const getFavorites = async(req: Request, res: Response) => {
             })
         }
 
-        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token, ENV.JWT_SECRET_KEY)))
-        const userID = decodedToken.id
         const user = await UsersModel.findOne({_id: userID})
-
+        
         if(!user){
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
@@ -52,9 +54,13 @@ export const getFavorites = async(req: Request, res: Response) => {
 export const addFavorites = async(req: Request, res: Response) => {
     try {
         const {imdbID} = req.query
-        const {token} = req.cookies
+        const token = req.headers['authorization']?.split(' ')[1]
+        // const {token} = req.cookies
 
-        if(!token){
+        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token!, ENV.JWT_SECRET_KEY)))
+        const userID = decodedToken.id
+
+        if(!userID){
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
                 message: messages.TOKEN_EXPIRED,
@@ -63,8 +69,6 @@ export const addFavorites = async(req: Request, res: Response) => {
             })
         }
 
-        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token, ENV.JWT_SECRET_KEY)))
-        const userID = decodedToken.id
         const user = await UsersModel.findOne({_id: userID})
         
         const favMovie = user?.favorites.find((i)=>i === imdbID)
@@ -100,9 +104,13 @@ export const addFavorites = async(req: Request, res: Response) => {
 export const removeFavorites = async(req: Request, res: Response) => {
     try {
         const {imdbID} = req.query
-        const {token} = req.cookies
+        const token = req.headers['authorization']?.split(' ')[1]
+        // const {token} = req.cookies
 
-        if(!token){
+        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token!, ENV.JWT_SECRET_KEY)))
+        const userID = decodedToken.id
+
+        if(!userID){
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
                 message: messages.TOKEN_EXPIRED,
@@ -111,8 +119,6 @@ export const removeFavorites = async(req: Request, res: Response) => {
             })
         }
 
-        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token, ENV.JWT_SECRET_KEY)))
-        const userID = decodedToken.id
         const user = await UsersModel.findOne({_id: userID})
 
         if(!user){

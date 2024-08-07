@@ -8,9 +8,13 @@ import { CommentsRatingsModel } from "../models/commentRatingModel"
 export const getCommentsAndRatings = async(req: Request, res: Response) => {
     try {
         const {imdbID} = req.query
-        const {token} = req.cookies
+        const token = req.headers['authorization']?.split(' ')[1]
+        // const {token} = req.cookies
 
-        if(!token){
+        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token!, ENV.JWT_SECRET_KEY)))
+        const userID = decodedToken.id
+
+        if(!userID){
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
                 message: messages.TOKEN_EXPIRED,
@@ -18,9 +22,6 @@ export const getCommentsAndRatings = async(req: Request, res: Response) => {
                 data: {}
             })
         }
-
-        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token, ENV.JWT_SECRET_KEY)))
-        const userID = decodedToken.id
 
         const comsRatsData = await CommentsRatingsModel.find({imdbID})
 
@@ -44,9 +45,13 @@ export const addCommentsAndRatings = async(req: Request, res: Response) => {
     try {
         const {imdbID} = req.query
         const {comments, ratings} = req.body
-        const {token} = req.cookies
+        const token = req.headers['authorization']?.split(' ')[1]
+        // const {token} = req.cookies
 
-        if(!token){
+        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token!, ENV.JWT_SECRET_KEY)))
+        const userID = decodedToken.id
+
+        if(!userID){
             return res.status(StatusCodes.NOT_FOUND).json({
                 success: false,
                 message: messages.TOKEN_EXPIRED,
@@ -54,9 +59,6 @@ export const addCommentsAndRatings = async(req: Request, res: Response) => {
                 data: {}
             })
         }
-
-        const decodedToken = JSON.parse(JSON.stringify(jwt.verify(token, ENV.JWT_SECRET_KEY)))
-        const userID = decodedToken.id
         
         const newComment = new CommentsRatingsModel({
             imdbID,
@@ -67,8 +69,6 @@ export const addCommentsAndRatings = async(req: Request, res: Response) => {
         
         await newComment.save()
         const updatedUserRatings = await CommentsRatingsModel.updateMany({userID, imdbID},{$set: {ratings}})
-        // const dbComments = await CommentsRatingsModel.find({})
-        // console.log(dbComments)
 
         return res.status(StatusCodes.CREATED).json({
             success: true,

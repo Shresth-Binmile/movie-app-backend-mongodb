@@ -3,7 +3,7 @@ import { Request, Response } from "express"
 import messages from "../utils/messages"
 import {UsersModel} from "../models/userModel"
 import jwt from 'jsonwebtoken'
-import bcryptjs, { genSalt } from 'bcryptjs'
+import bcryptjs from 'bcryptjs'
 import { ENV } from "../configs/server-config"
 import { validationResult } from "express-validator"
 
@@ -103,7 +103,7 @@ export const loginHandler = async(req:Request, res:Response) => {
             success: true,
             message: messages.LOGIN_SUCCESS,
             error: {},
-            data: req.body
+            data: {token}
         })
     } catch (error) {
         return res.status(StatusCodes.BAD_REQUEST).json({

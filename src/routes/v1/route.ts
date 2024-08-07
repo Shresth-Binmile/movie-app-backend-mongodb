@@ -12,8 +12,8 @@ router.post('/login', signinValidation, loginHandler)
 
 // favorites apis
 router.get('/getFavorites', getFavorites)
-router.post('/addFavorites', addFavorites)
-router.post('/removeFavorites', removeFavorites)
+router.get('/addFavorites', addFavorites)
+router.get('/removeFavorites', removeFavorites)
 
 // comments & ratings apis
 router.get('/getCommmentsAndRatings', getCommentsAndRatings)

@@ -21,7 +21,7 @@ app.use('/api/v1', router)
 
 app.get('/', (req:Request, res:Response)=>{
     try {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+        return res.status(StatusCodes.OK).json({
             success: true,
             message: messages.WELCOME,
             error: {},
